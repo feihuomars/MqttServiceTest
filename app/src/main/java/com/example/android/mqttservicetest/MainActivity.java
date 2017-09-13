@@ -75,11 +75,16 @@ public class MainActivity extends FragmentActivity {
         fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
         Log.i(TAG, "onCreate: " + bundle1.getString("id"));
 
-        List selectedList = new ArrayList<>();
-        selectedList.add(DataSupport.findLast(History.class).getMessage());
-        selectedList = DataSupport.findAll(History.class);
 
-        ((Data)getApplicationContext()).historyList.add(DataSupport.findLast(History.class).getMessage());
+
+        List<History> selectedList = DataSupport.findAll(History.class);
+        ArrayList<String> data = new ArrayList<String>();
+        for (History history: selectedList){
+            Log.i(TAG, "onCreate: " + history.getMessage());
+            ((Data)getApplicationContext()).historyList.add(history.getMessage());
+        }
+
+        //((Data)getApplicationContext()).historyList.add(DataSupport.findLast(History.class).getMessage());
 
         initMqtt();
     }
@@ -132,13 +137,17 @@ public class MainActivity extends FragmentActivity {
 
                 }
             });
-
-
-
-
+            
         } catch (MqttException e) {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: destroy Mainactivity");
+        ((Data)getApplicationContext()).historyList.clear();
     }
 }
