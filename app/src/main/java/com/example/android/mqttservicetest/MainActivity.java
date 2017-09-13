@@ -20,6 +20,7 @@ import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
@@ -74,8 +75,10 @@ public class MainActivity extends FragmentActivity {
         fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
         Log.i(TAG, "onCreate: " + bundle1.getString("id"));
 
-        ArrayList<String> selectedList = new ArrayList<>();
+        List selectedList = new ArrayList<>();
         selectedList.add(DataSupport.findLast(History.class).getMessage());
+        selectedList = DataSupport.findAll(History.class);
+
         ((Data)getApplicationContext()).historyList.add(DataSupport.findLast(History.class).getMessage());
 
         initMqtt();

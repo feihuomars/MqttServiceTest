@@ -1,7 +1,9 @@
 package com.example.android.mqttservicetest;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +40,7 @@ public class HistoryFragment extends Fragment {
 //        Bundle bundle1 = getArguments();
 //        String bundleMessage = bundle1.getString("id");
 //        Log.i(TAG, "onCreateView: " + bundleMessage);
-        Log.i(TAG, "onCreateView: create historyFragment");
+        Log.i(TAG, "onCreateView: createView historyFragment");
 
         // Inflate the layout for this fragment
         return view;
@@ -47,12 +49,60 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart: start historyFragment");
+        Log.i(TAG, "onStart: start HistoryFragment");
         //History lastHistory = DataSupport.findLast(History.class);
         //historyList.add(lastHistory.getMessage());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, getData().historyList);
         listView.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: destroy HistoryFragment ");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.i(TAG, "onAttach: attach HistoryFragment");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate: create HistoryFragment");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: resume HistoryFragment");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: pause HistoryFragment");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: stop HistoryFragment");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG, "onDestroyView: destroyView HistoryFragment");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.i(TAG, "onDetach: detach HistoryFragment");
     }
 
     private Data getData() {
