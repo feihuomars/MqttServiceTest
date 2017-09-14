@@ -19,7 +19,6 @@ import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity {
@@ -29,7 +28,8 @@ public class MainActivity extends FragmentActivity {
     public FragmentTabHost fragmentTabHost;
     FragmentManager fragmentManager;
 
-    ArrayList<String> historyList = new ArrayList<>();
+    //
+    // ArrayList<String> historyList = new ArrayList<>();
 
 
     MqttAndroidClient mqttAndroidClient;
@@ -52,33 +52,30 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //数据库初始化
         LitePal.initialize(this);
         Connector.getDatabase();
 
         fragmentTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         fragmentTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-
         Bundle bundle = new Bundle();
-
         fragmentTabHost.addTab(fragmentTabHost.newTabSpec("history").setIndicator("历史"), HistoryFragment.class, bundle);
         fragmentTabHost.addTab(fragmentTabHost.newTabSpec("订阅").setIndicator("订阅"), SubscriptionFragment.class, bundle);
 
-        historyList.add("warning");
+        //historyList.add("warning");
 
-        fragmentManager = getSupportFragmentManager();
-        HistoryFragment historyFragment = new HistoryFragment();
-        Bundle bundle1 = new Bundle();
-        bundle1.putString("id", "bundle transaction");
-
-
-        historyFragment.setArguments(bundle1);
-        fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
-        Log.i(TAG, "onCreate: " + bundle1.getString("id"));
+//        fragmentManager = getSupportFragmentManager();
+//        HistoryFragment historyFragment = new HistoryFragment();
+//        Bundle bundle1 = new Bundle();
+//        bundle1.putString("id", "bundle transaction");
+//        historyFragment.setArguments(bundle1);
+//        fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
+//        Log.i(TAG, "onCreate: " + bundle1.getString("id"));
 
 
 
         List<History> selectedList = DataSupport.findAll(History.class);
-        ArrayList<String> data = new ArrayList<String>();
+        //ArrayList<String> data = new ArrayList<String>();
         for (History history: selectedList){
             Log.i(TAG, "onCreate: " + history.getMessage());
             ((Data)getApplicationContext()).historyList.add(history.getMessage());
@@ -125,8 +122,8 @@ public class MainActivity extends FragmentActivity {
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
-                    History lastHistory = DataSupport.findLast(History.class);
-                    Log.i(TAG, "database: " + lastHistory.getMessage());
+                    //History lastHistory = DataSupport.findLast(History.class);
+                    //Log.i(TAG, "database: " + lastHistory.getMessage());
                     //ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, historyList);
                     //listView.setAdapter(adapter);
 

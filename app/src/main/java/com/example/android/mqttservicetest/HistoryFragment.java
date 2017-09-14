@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +21,7 @@ public class HistoryFragment extends Fragment {
     private View view;
     ListView listView;
 
-    ArrayList<String> historyList = new ArrayList<>();
+    //ArrayList<String> historyList = new ArrayList<>();
 
 
     public HistoryFragment() {
