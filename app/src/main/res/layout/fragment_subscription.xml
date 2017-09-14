@@ -12,7 +12,7 @@
         android:text="@string/hello_blank_fragment" />
 
     <Button
-        android:id="@+id/subscribe"
+        android:id="@+id/subscribe_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="add"/>
