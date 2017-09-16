@@ -20,6 +20,7 @@ import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity {
@@ -34,8 +35,12 @@ public class MainActivity extends FragmentActivity {
 
     MqttAndroidClient mqttAndroidClient;
     final String serverUri = "tcp://47.94.246.26:1883";
-    String[] topics = {"warning", "warnings"};
-    int[] qoss = {0, 0};
+    String[] topics = new String[30];
+    int[] qoss = new int[30];
+
+    String[] testTopics = {"warning", "warnings"};
+    int[] testQoss = {0, 0};
+
     IMqttMessageListener[] iMqttMessageListeners = {new IMqttMessageListener() {
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -69,22 +74,43 @@ public class MainActivity extends FragmentActivity {
         HistoryFragment historyFragment = new HistoryFragment();
         Bundle bundle1 = new Bundle();
         bundle1.putString("id", "bundle transaction");
-
-
         historyFragment.setArguments(bundle1);
         fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
         Log.i(TAG, "onCreate: " + bundle1.getString("id"));
+        //预先存入数据做测试
+        DataSupport.deleteAll(SubscriptionDB.class);
+        SubscriptionDB subscription0 = new SubscriptionDB();
+        subscription0.setTopic("warning");
+        subscription0.setQos(0);
+        subscription0.save();
 
+        SubscriptionDB subscription1 = new SubscriptionDB();
+        subscription1.setTopic("warnings");
+        subscription1.setQos(0);
+        subscription1.save();
 
+        SubscriptionDB subscription2 = new SubscriptionDB();
+        subscription2.setTopic("test");
+        subscription2.setQos(0);
+        subscription2.save();
 
-        List<History> selectedList = DataSupport.findAll(History.class);
+        List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
         ArrayList<String> data = new ArrayList<String>();
-        for (History history: selectedList){
-            Log.i(TAG, "onCreate: " + history.getMessage());
-            ((Data)getApplicationContext()).historyList.add(history.getMessage());
+        for (HistoryDB historyDB : selectedList){
+            Log.i(TAG, "onCreate: " + historyDB.getMessage());
+            ((Data)getApplicationContext()).historyList.add(historyDB.getMessage());
         }
-
-        //((Data)getApplicationContext()).historyList.add(DataSupport.findLast(History.class).getMessage());
+        List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);
+        int i = 0;
+        for (SubscriptionDB subscriptionDB : foundSubscription) {
+            Log.i(TAG, "onCreate: topic:" + subscriptionDB.getTopic());
+            Log.i(TAG, "onCreate: qos:" + subscriptionDB.getQos());
+            topics[i] = subscriptionDB.getTopic();
+            qoss[i] = subscriptionDB.getQos();
+            i++;
+        }
+        Log.i(TAG, "onCreate: topic array:" + Arrays.toString(topics) + Arrays.toString(qoss));
+        //((Data)getApplicationContext()).historyList.add(DataSupport.findLast(HistoryDB.class).getMessage());
 
         initMqtt();
     }
@@ -108,25 +134,36 @@ public class MainActivity extends FragmentActivity {
                     textView.setText("success");
 
                     try {
-                        mqttAndroidClient.subscribe("warning", 0, new IMqttMessageListener() {
+                        mqttAndroidClient.subscribe(testTopics, testQoss, null, new IMqttActionListener() {
                             @Override
-                            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                                String recvMessage = new String (message.getPayload());
-                                Log.i(TAG, "messageArrived: " + recvMessage);
-                                //historyList.add(recvMessage);
-                                History history = new History();
-                                history.setMessage(recvMessage);
-                                history.save();
+                            public void onSuccess(IMqttToken asyncActionToken) {
+                                Log.i(TAG, "onSuccess: subscriptions succeed");
+                            }
+
+                            @Override
+                            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                                Log.i(TAG, "onFailure: subscriprions failed");
                             }
                         });
-
-                        //mqttAndroidClient.subscribe(topics, qoss, iMqttMessageListeners);
+//                        mqttAndroidClient.subscribe("warning", 0, new IMqttMessageListener() {
+//                            @Override
+//                            public void messageArrived(String topic, MqttMessage message) throws Exception {
+//                                String recvMessage = new String (message.getPayload());
+//                                Log.i(TAG, "messageArrived: " + recvMessage);
+//                                //historyList.add(recvMessage);
+//                                HistoryDB historyDB = new HistoryDB();
+//                                historyDB.setMessage(recvMessage);
+//                                historyDB.save();
+//                            }
+//                        });
+                        
+                        mqttAndroidClient.subscribe(topics, qoss, iMqttMessageListeners);
 
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
-                    History lastHistory = DataSupport.findLast(History.class);
-                    //Log.i(TAG, "database: " + lastHistory.getMessage());
+                    HistoryDB lastHistoryDB = DataSupport.findLast(HistoryDB.class);
+                    //Log.i(TAG, "database: " + lastHistoryDB.getMessage());
                     //ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, historyList);
                     //listView.setAdapter(adapter);
 

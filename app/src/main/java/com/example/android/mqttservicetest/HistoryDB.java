@@ -6,7 +6,7 @@ import org.litepal.crud.DataSupport;
  * Created by feihu on 2017/9/9.
  */
 
-public class History extends DataSupport{
+public class HistoryDB extends DataSupport{
     private int id;
     private String message;
 

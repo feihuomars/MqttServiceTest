@@ -48,7 +48,7 @@ public class HistoryFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.i(TAG, "onStart: start HistoryFragment");
-        //History lastHistory = DataSupport.findLast(History.class);
+        //HistoryDB lastHistory = DataSupport.findLast(HistoryDB.class);
         //historyList.add(lastHistory.getMessage());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, getData().historyList);
         listView.setAdapter(adapter);
