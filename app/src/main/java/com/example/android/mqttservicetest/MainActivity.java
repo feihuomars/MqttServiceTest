@@ -35,23 +35,41 @@ public class MainActivity extends FragmentActivity {
 
     MqttAndroidClient mqttAndroidClient;
     final String serverUri = "tcp://47.94.246.26:1883";
-    String[] topics = new String[30];
-    int[] qoss = new int[30];
+    String[] topics;
+    Integer[] qossInteger;
+    int[] qoss;
 
     String[] testTopics = {"warning", "warnings"};
     int[] testQoss = {0, 0};
 
-    IMqttMessageListener[] iMqttMessageListeners = {new IMqttMessageListener() {
+    IMqttMessageListener topic1Listener = new IMqttMessageListener() {
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
-            Log.i(TAG, "messageArrived: " + new String (message.getPayload()));
+            String recvMessage = new String(message.getPayload());
+            Log.i(TAG, topic + " messageArrived: " + recvMessage);
         }
-    }, new IMqttMessageListener() {
+    };
+
+    IMqttMessageListener topic2Listener = new IMqttMessageListener() {
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
-            Log.i(TAG, "messageArrived: " + new String (message.getPayload()));
+            String recvMessage = new String(message.getPayload());
+            Log.i(TAG, topic + " messageArrived: " + recvMessage);
         }
-    }};
+    };
+
+    IMqttMessageListener topic3Listener = new IMqttMessageListener() {
+        @Override
+        public void messageArrived(String topic, MqttMessage message) throws Exception {
+            String recvMessage = new String(message.getPayload());
+            Log.i(TAG, topic + " messageArrived: " + recvMessage);
+        }
+    };
+
+    IMqttMessageListener[] iMqttMessageListeners = {topic1Listener, topic2Listener, topic3Listener};
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,15 +119,24 @@ public class MainActivity extends FragmentActivity {
             ((Data)getApplicationContext()).historyList.add(historyDB.getMessage());
         }
         List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);
-        int i = 0;
+
+        ArrayList<String> topicList = new ArrayList<>();
+        ArrayList<Integer> qosList = new ArrayList<>();
         for (SubscriptionDB subscriptionDB : foundSubscription) {
             Log.i(TAG, "onCreate: topic:" + subscriptionDB.getTopic());
             Log.i(TAG, "onCreate: qos:" + subscriptionDB.getQos());
-            topics[i] = subscriptionDB.getTopic();
-            qoss[i] = subscriptionDB.getQos();
-            i++;
+            topicList.add(subscriptionDB.getTopic());
+            qosList.add(subscriptionDB.getQos());
         }
-        Log.i(TAG, "onCreate: topic array:" + Arrays.toString(topics) + Arrays.toString(qoss));
+        topics = new String[topicList.size()];
+        qossInteger = new Integer[qosList.size()];
+        qoss = new int[qosList.size()];
+        topicList.toArray(topics);
+        qosList.toArray(qossInteger);
+        for (int i = 0; i < qossInteger.length; i++) {
+            qoss[i] = qossInteger[i].intValue();
+        }
+        Log.i(TAG, "onCreate: topic array:" + Arrays.toString(topics) + Arrays.toString(qossInteger));
         //((Data)getApplicationContext()).historyList.add(DataSupport.findLast(HistoryDB.class).getMessage());
 
         initMqtt();
@@ -134,7 +161,7 @@ public class MainActivity extends FragmentActivity {
                     textView.setText("success");
 
                     try {
-                        mqttAndroidClient.subscribe(testTopics, testQoss, null, new IMqttActionListener() {
+                        mqttAndroidClient.subscribe(topics, qoss, null, new IMqttActionListener() {
                             @Override
                             public void onSuccess(IMqttToken asyncActionToken) {
                                 Log.i(TAG, "onSuccess: subscriptions succeed");
