@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -146,7 +148,28 @@ public class MainActivity extends FragmentActivity {
         String clientId = MqttClient.generateClientId();
         mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), serverUri,
                         clientId);
+        mqttAndroidClient.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
 
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                String recvMessage = new String (message.getPayload());
+                Log.i(TAG, "messageArrived: " + topic + recvMessage);
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
 
         try {
             mqttAndroidClient.connect(null, new IMqttActionListener() {
@@ -184,7 +207,7 @@ public class MainActivity extends FragmentActivity {
 //                            }
 //                        });
                         
-                        mqttAndroidClient.subscribe(topics, qoss, iMqttMessageListeners);
+//                        mqttAndroidClient.subscribe(topics, qoss, iMqttMessageListeners);
 
                     } catch (MqttException e) {
                         e.printStackTrace();
