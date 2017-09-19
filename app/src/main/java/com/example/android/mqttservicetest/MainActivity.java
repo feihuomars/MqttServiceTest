@@ -115,12 +115,16 @@ public class MainActivity extends FragmentActivity {
         subscription2.save();
 
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
-        ArrayList<String> data = new ArrayList<String>();
+//        ArrayList<String> data = new ArrayList<String>();
         for (HistoryDB historyDB : selectedList){
             Log.i(TAG, "onCreate: " + historyDB.getMessage());
             ((Data)getApplicationContext()).historyList.add(historyDB.getMessage());
         }
+        //从数据库中查出订阅消息
         List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);
+        for (SubscriptionDB subscriptionDB : foundSubscription) {
+            ((Data)getApplicationContext()).subscriptionList.add(subscriptionDB.getTopic());
+        }
 
         ArrayList<String> topicList = new ArrayList<>();
         ArrayList<Integer> qosList = new ArrayList<>();
@@ -163,6 +167,9 @@ public class MainActivity extends FragmentActivity {
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String recvMessage = new String (message.getPayload());
                 Log.i(TAG, "messageArrived: " + topic + recvMessage);
+                HistoryDB historyDB = new HistoryDB();
+                historyDB.setMessage(recvMessage);
+                historyDB.save();
             }
 
             @Override

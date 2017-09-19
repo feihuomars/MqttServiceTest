@@ -11,10 +11,16 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_blank_fragment" />
 
+    <ListView
+        android:id="@+id/subscription_list_view"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+
     <Button
         android:id="@+id/subscribe_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="add"/>
+
 
 </LinearLayout>

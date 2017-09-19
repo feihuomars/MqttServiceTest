@@ -10,4 +10,5 @@ import java.util.ArrayList;
 
 public class Data extends Application{
     public ArrayList<String> historyList = new ArrayList<>();
+    public ArrayList<String> subscriptionList = new ArrayList<>();
 }

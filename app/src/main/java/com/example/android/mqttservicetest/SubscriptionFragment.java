@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
@@ -16,7 +18,8 @@ import android.widget.Toast;
  * A simple {@link Fragment} subclass.
  */
 public class SubscriptionFragment extends Fragment {
-
+    private View view;
+    ListView listView;
 
     public SubscriptionFragment() {
         // Required empty public constructor
@@ -27,7 +30,16 @@ public class SubscriptionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_subscription, container, false);
+        view = inflater.inflate(R.layout.fragment_subscription, container, false);
+        listView = view.findViewById(R.id.subscription_list_view);
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, getData().subscriptionList);
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -42,5 +54,13 @@ public class SubscriptionFragment extends Fragment {
                 Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
+
+    private Data getData() {
+        return ((Data)getActivity().getApplicationContext());}
+
 }
+
+
