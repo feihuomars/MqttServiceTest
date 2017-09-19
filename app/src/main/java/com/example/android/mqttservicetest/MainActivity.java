@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -167,6 +168,8 @@ public class MainActivity extends FragmentActivity {
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String recvMessage = new String (message.getPayload());
                 Log.i(TAG, "messageArrived: " + topic + recvMessage);
+                Toast.makeText(MainActivity.this, recvMessage, Toast.LENGTH_SHORT);
+
                 HistoryDB historyDB = new HistoryDB();
                 historyDB.setMessage(recvMessage);
                 historyDB.save();
