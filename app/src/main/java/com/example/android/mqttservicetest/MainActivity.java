@@ -105,7 +105,7 @@ public class MainActivity extends FragmentActivity {
 //        Log.i(TAG, "onCreate: " + bundle1.getString("id"));
 
         //预先存入数据做测试
-//        DataSupport.deleteAll(SubscriptionDB.class);
+//        DataSupport.deleteAll(HistoryDB.class);
 //        SubscriptionDB subscription0 = new SubscriptionDB();
 //        subscription0.setTopic("warning");
 //        subscription0.setQos(0);
