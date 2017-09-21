@@ -38,8 +38,10 @@ public class SubscriptionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, getData().subscriptionList);
         listView.setAdapter(adapter);
+
     }
 
     @Override
@@ -49,6 +51,7 @@ public class SubscriptionFragment extends Fragment {
         subscribeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(getActivity(), SubscriptionInfo.class);
                 startActivity(intent);
                 Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
@@ -56,6 +59,12 @@ public class SubscriptionFragment extends Fragment {
         });
 
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //getData().subscriptionList.clear();
     }
 
     private Data getData() {

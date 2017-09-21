@@ -1,13 +1,17 @@
 package com.example.android.mqttservicetest;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -78,6 +82,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.i(TAG, "onCreate: create MainActivity");
         LitePal.initialize(this);
         Connector.getDatabase();
 
@@ -91,29 +96,30 @@ public class MainActivity extends FragmentActivity {
 
         historyList.add("warning");
 
-        fragmentManager = getSupportFragmentManager();
-        HistoryFragment historyFragment = new HistoryFragment();
-        Bundle bundle1 = new Bundle();
-        bundle1.putString("id", "bundle transaction");
-        historyFragment.setArguments(bundle1);
-        fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
-        Log.i(TAG, "onCreate: " + bundle1.getString("id"));
+//        fragmentManager = getSupportFragmentManager();
+//        HistoryFragment historyFragment = new HistoryFragment();
+//        Bundle bundle1 = new Bundle();
+//        bundle1.putString("id", "bundle transaction");
+//        historyFragment.setArguments(bundle1);
+//        fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
+//        Log.i(TAG, "onCreate: " + bundle1.getString("id"));
+
         //预先存入数据做测试
-        DataSupport.deleteAll(SubscriptionDB.class);
-        SubscriptionDB subscription0 = new SubscriptionDB();
-        subscription0.setTopic("warning");
-        subscription0.setQos(0);
-        subscription0.save();
-
-        SubscriptionDB subscription1 = new SubscriptionDB();
-        subscription1.setTopic("warnings");
-        subscription1.setQos(0);
-        subscription1.save();
-
-        SubscriptionDB subscription2 = new SubscriptionDB();
-        subscription2.setTopic("test");
-        subscription2.setQos(0);
-        subscription2.save();
+//        DataSupport.deleteAll(SubscriptionDB.class);
+//        SubscriptionDB subscription0 = new SubscriptionDB();
+//        subscription0.setTopic("warning");
+//        subscription0.setQos(0);
+//        subscription0.save();
+//
+//        SubscriptionDB subscription1 = new SubscriptionDB();
+//        subscription1.setTopic("warnings");
+//        subscription1.setQos(0);
+//        subscription1.save();
+//
+//        SubscriptionDB subscription2 = new SubscriptionDB();
+//        subscription2.setTopic("test");
+//        subscription2.setQos(0);
+//        subscription2.save();
 
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
 //        ArrayList<String> data = new ArrayList<String>();
@@ -167,8 +173,20 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String recvMessage = new String (message.getPayload());
-                Log.i(TAG, "messageArrived: " + topic + recvMessage);
-                Toast.makeText(MainActivity.this, recvMessage, Toast.LENGTH_SHORT);
+                Log.i(TAG, "messageArrived: topic: " + topic + "message: " + recvMessage + "time:" + System.currentTimeMillis());
+
+                //设置notification通知
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                PendingIntent pi = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+                Notification notification = new NotificationCompat.Builder(MainActivity.this)
+                        .setContentTitle(topic)
+                        .setContentText(recvMessage)
+                        .setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentIntent(pi)
+                        .build();
+                manager.notify(1, notification);
 
                 HistoryDB historyDB = new HistoryDB();
                 historyDB.setMessage(recvMessage);
@@ -246,5 +264,38 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
         Log.i(TAG, "onDestroy: destroy Mainactivity");
         ((Data)getApplicationContext()).historyList.clear();
+        ((Data) getApplicationContext()).subscriptionList.clear();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: start MainActivity");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: resume MainActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: pause MainActivity");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: stop MainActivity");
+        ((Data)getApplicationContext()).historyList.clear();
+        ((Data) getApplicationContext()).subscriptionList.clear();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart: restart MainActivity");
     }
 }

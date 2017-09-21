@@ -59,6 +59,7 @@ public class HistoryFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: destroy HistoryFragment ");
+        getData().historyList.clear();
     }
 
     @Override
@@ -95,6 +96,7 @@ public class HistoryFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "onDestroyView: destroyView HistoryFragment");
+        //getData().historyList.clear();
     }
 
     @Override
