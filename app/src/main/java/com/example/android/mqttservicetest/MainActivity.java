@@ -124,7 +124,7 @@ public class MainActivity extends FragmentActivity {
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
         for (HistoryDB historyDB : selectedList){
             Log.i(TAG, "onCreate: " + historyDB.getMessage());
-            ((Data)getApplicationContext()).historyList.add(historyDB.getMessage());
+            ((Data)getApplicationContext()).historyList.add(0, historyDB.getMessage());     //逆序添加元素进list
         }
         //从数据库中查出订阅消息
         List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);
@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity {
                         .build();
                 manager.notify(1, notification);
 
-                ((Data)getApplicationContext()).historyList.add(recvMessage);
+                ((Data)getApplicationContext()).historyList.add(0, recvMessage);
                 HistoryDB historyDB = new HistoryDB();
                 historyDB.setMessage(recvMessage);
                 historyDB.save();

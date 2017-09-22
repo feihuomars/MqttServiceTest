@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Collections;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +23,7 @@ import android.widget.Toast;
 public class SubscriptionFragment extends Fragment {
     private View view;
     ListView listView;
+    List<String> subscriptionList;
 
     public SubscriptionFragment() {
         // Required empty public constructor
@@ -38,8 +42,10 @@ public class SubscriptionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, getData().subscriptionList);
+        subscriptionList = getData().subscriptionList;
+        Collections.reverse(subscriptionList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, subscriptionList);
+        adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
 
     }
