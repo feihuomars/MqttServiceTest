@@ -122,7 +122,6 @@ public class MainActivity extends FragmentActivity {
 //        subscription2.save();
 
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
-//        ArrayList<String> data = new ArrayList<String>();
         for (HistoryDB historyDB : selectedList){
             Log.i(TAG, "onCreate: " + historyDB.getMessage());
             ((Data)getApplicationContext()).historyList.add(historyDB.getMessage());
@@ -188,6 +187,7 @@ public class MainActivity extends FragmentActivity {
                         .build();
                 manager.notify(1, notification);
 
+                ((Data)getApplicationContext()).historyList.add(recvMessage);
                 HistoryDB historyDB = new HistoryDB();
                 historyDB.setMessage(recvMessage);
                 historyDB.save();
@@ -297,5 +297,16 @@ public class MainActivity extends FragmentActivity {
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart: restart MainActivity");
+
+        List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
+        for (HistoryDB historyDB : selectedList){
+            Log.i(TAG, "onCreate: " + historyDB.getMessage());
+            ((Data)getApplicationContext()).historyList.add(historyDB.getMessage());
+        }
+        //从数据库中查出订阅消息
+        List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);
+        for (SubscriptionDB subscriptionDB : foundSubscription) {
+            ((Data)getApplicationContext()).subscriptionList.add(subscriptionDB.getTopic());
+        }
     }
 }

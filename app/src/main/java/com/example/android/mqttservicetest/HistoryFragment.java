@@ -78,6 +78,7 @@ public class HistoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: resume HistoryFragment");
+
     }
 
     @Override
