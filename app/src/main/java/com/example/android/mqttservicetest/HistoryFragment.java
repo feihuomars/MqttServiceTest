@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.litepal.crud.DataSupport;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +48,8 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity(), "button clicked", Toast.LENGTH_SHORT).show();
-
+                DataSupport.deleteAll(HistoryDB.class);
+                getData().historyList.clear();
             }
         });
         // Inflate the layout for this fragment

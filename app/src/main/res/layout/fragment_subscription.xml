@@ -15,7 +15,7 @@
         android:id="@+id/subscribe_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add"/>
+        android:text="添加设备"/>
 
     <ListView
         android:id="@+id/subscription_list_view"

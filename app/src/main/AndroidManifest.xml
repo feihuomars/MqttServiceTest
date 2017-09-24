@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme"
         >
         <activity android:name=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:label="MQTT接收器">
 ">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -5,13 +5,17 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -30,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -83,8 +87,12 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "onCreate: create MainActivity");
+        //数据库初始化
         LitePal.initialize(this);
         Connector.getDatabase();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
 
         fragmentTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         fragmentTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
@@ -94,7 +102,9 @@ public class MainActivity extends FragmentActivity {
         fragmentTabHost.addTab(fragmentTabHost.newTabSpec("history").setIndicator("历史"), HistoryFragment.class, bundle);
         fragmentTabHost.addTab(fragmentTabHost.newTabSpec("订阅").setIndicator("订阅"), SubscriptionFragment.class, bundle);
 
-        historyList.add("warning");
+
+
+//        historyList.add("warning");
 
 //        fragmentManager = getSupportFragmentManager();
 //        HistoryFragment historyFragment = new HistoryFragment();
@@ -308,5 +318,27 @@ public class MainActivity extends FragmentActivity {
         for (SubscriptionDB subscriptionDB : foundSubscription) {
             ((Data)getApplicationContext()).subscriptionList.add(subscriptionDB.getTopic());
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.backup:
+                Toast.makeText(this, "Backup Clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.delete:
+                Toast.makeText(this, "Delete Clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.settings:
+                Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
     }
 }
