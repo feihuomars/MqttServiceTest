@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity {
 //        fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
 //        Log.i(TAG, "onCreate: " + bundle1.getString("id"));
 
-        //预先存入数据做测试
+        //预先存入数据做测试，清除所有数据
 //        DataSupport.deleteAll(HistoryDB.class);
 //        SubscriptionDB subscription0 = new SubscriptionDB();
 //        subscription0.setTopic("warning");

@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 /**
@@ -20,7 +22,7 @@ public class HistoryFragment extends Fragment {
     private static final String TAG = "HistoryFragment";
     private View view;
     ListView listView;
-
+    Button clearButton;
     //ArrayList<String> historyList = new ArrayList<>();
 
 
@@ -34,12 +36,19 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_history, container, false);
         listView = (ListView) view.findViewById(R.id.history_list_view);
+        clearButton = view.findViewById(R.id.clear_button);
 //        historyList.add("warning");
 //        Bundle bundle1 = getArguments();
 //        String bundleMessage = bundle1.getString("id");
 //        Log.i(TAG, "onCreateView: " + bundleMessage);
         Log.i(TAG, "onCreateView: createView historyFragment");
+        clearButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "button clicked", Toast.LENGTH_SHORT).show();
 
+            }
+        });
         // Inflate the layout for this fragment
         return view;
     }
