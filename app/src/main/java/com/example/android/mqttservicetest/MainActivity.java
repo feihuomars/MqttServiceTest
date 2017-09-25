@@ -194,6 +194,9 @@ public class MainActivity extends AppCompatActivity {
                         .setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentIntent(pi)
+                        .setAutoCancel(true)
+                        .setDefaults(NotificationCompat.DEFAULT_ALL)    //使用默认的声音、震动、led效果
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
                         .build();
                 manager.notify(1, notification);
 
