@@ -10,10 +10,7 @@
     tools:context="com.example.android.mqttservicetest.MainActivity"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/main_toolbar"
@@ -23,7 +20,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    </FrameLayout>
+
 
     <android.support.v4.app.FragmentTabHost android:id="@android:id/tabhost"
         android:layout_height="match_parent"

@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         //数据库初始化
         LitePal.initialize(this);
         Connector.getDatabase();
-
+        //设置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
