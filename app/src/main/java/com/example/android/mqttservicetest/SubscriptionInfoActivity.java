@@ -3,14 +3,15 @@ package com.example.android.mqttservicetest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class SubscriptionInfo extends AppCompatActivity {
+public class SubscriptionInfoActivity extends AppCompatActivity {
 
-    private static final String TAG = "SubscriptionInfo";
+    private static final String TAG = "SubscriptionInfoActivit";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +20,9 @@ public class SubscriptionInfo extends AppCompatActivity {
         final EditText topicEditText = (EditText) findViewById(R.id.topic_edit_text);
         final EditText qosEditText = (EditText) findViewById(R.id.qos_edit_text);
         final Button submitButton = (Button) findViewById(R.id.submit_button);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.subscription_info_toolbar);
+        setSupportActionBar(toolbar);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,7 +34,7 @@ public class SubscriptionInfo extends AppCompatActivity {
                 subscriptionDB.setTopic(topic);
                 subscriptionDB.setQos(Integer.parseInt(qos));
                 subscriptionDB.save();
-                Intent intent = new Intent (SubscriptionInfo.this, MainActivity.class);
+                Intent intent = new Intent (SubscriptionInfoActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
