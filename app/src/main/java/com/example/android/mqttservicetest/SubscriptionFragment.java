@@ -4,6 +4,7 @@ package com.example.android.mqttservicetest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,13 @@ public class SubscriptionFragment extends Fragment {
             }
         });
 
-
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "FAB activity", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

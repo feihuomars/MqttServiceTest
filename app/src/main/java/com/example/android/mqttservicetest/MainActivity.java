@@ -5,7 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -42,47 +42,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     public FragmentTabHost fragmentTabHost;
-    FragmentManager fragmentManager;
-
-    ArrayList<String> historyList = new ArrayList<>();
-
 
     MqttAndroidClient mqttAndroidClient;
     final String serverUri = "tcp://47.94.246.26:1883";
     String[] topics;
     Integer[] qossInteger;
     int[] qoss;
-
-    String[] testTopics = {"warning", "warnings"};
-    int[] testQoss = {0, 0};
-
-    IMqttMessageListener topic1Listener = new IMqttMessageListener() {
-        @Override
-        public void messageArrived(String topic, MqttMessage message) throws Exception {
-            String recvMessage = new String(message.getPayload());
-            Log.i(TAG, topic + " messageArrived: " + recvMessage);
-        }
-    };
-
-    IMqttMessageListener topic2Listener = new IMqttMessageListener() {
-        @Override
-        public void messageArrived(String topic, MqttMessage message) throws Exception {
-            String recvMessage = new String(message.getPayload());
-            Log.i(TAG, topic + " messageArrived: " + recvMessage);
-        }
-    };
-
-    IMqttMessageListener topic3Listener = new IMqttMessageListener() {
-        @Override
-        public void messageArrived(String topic, MqttMessage message) throws Exception {
-            String recvMessage = new String(message.getPayload());
-            Log.i(TAG, topic + " messageArrived: " + recvMessage);
-        }
-    };
-
-    IMqttMessageListener[] iMqttMessageListeners = {topic1Listener, topic2Listener, topic3Listener};
-
-
 
 
     @Override
@@ -98,49 +63,28 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout)findViewById(R.id.main_drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
-
+        navigationView.setCheckedItem(R.id.nav_call);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
+        //fragmentTabHost相关设置
         fragmentTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         fragmentTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-
         Bundle bundle = new Bundle();
-
         fragmentTabHost.addTab(fragmentTabHost.newTabSpec("history").setIndicator("历史"), HistoryFragment.class, bundle);
         fragmentTabHost.addTab(fragmentTabHost.newTabSpec("订阅").setIndicator("订阅"), SubscriptionFragment.class, bundle);
 
-
-
-//        historyList.add("warning");
-
-//        fragmentManager = getSupportFragmentManager();
-//        HistoryFragment historyFragment = new HistoryFragment();
-//        Bundle bundle1 = new Bundle();
-//        bundle1.putString("id", "bundle transaction");
-//        historyFragment.setArguments(bundle1);
-//        fragmentManager.beginTransaction().replace(android.R.id.tabcontent, historyFragment);
-//        Log.i(TAG, "onCreate: " + bundle1.getString("id"));
-
-        //预先存入数据做测试，清除所有数据
-//        DataSupport.deleteAll(HistoryDB.class);
-//        SubscriptionDB subscription0 = new SubscriptionDB();
-//        subscription0.setTopic("warning");
-//        subscription0.setQos(0);
-//        subscription0.save();
-//
-//        SubscriptionDB subscription1 = new SubscriptionDB();
-//        subscription1.setTopic("warnings");
-//        subscription1.setQos(0);
-//        subscription1.save();
-//
-//        SubscriptionDB subscription2 = new SubscriptionDB();
-//        subscription2.setTopic("test");
-//        subscription2.setQos(0);
-//        subscription2.save();
-
+        //从数据库中查出历史消息
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
         for (HistoryDB historyDB : selectedList){
             Log.i(TAG, "onCreate: " + historyDB.getMessage());
@@ -178,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         String clientId = MqttClient.generateClientId();
         mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), serverUri,
                         clientId);
+        //设置消息回调
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -229,9 +174,6 @@ public class MainActivity extends AppCompatActivity {
                     HistoryFragment historyFragment = (HistoryFragment) getSupportFragmentManager().findFragmentByTag("history");
                     View view = historyFragment.getView();
                     final TextView textView = (TextView) view.findViewById(R.id.history_text);
-                    //final ListView listView = view.findViewById(R.id.history_list_view);
-
-
                     textView.setText("success");
 
                     try {
@@ -246,27 +188,11 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i(TAG, "onFailure: subscriprions failed");
                             }
                         });
-//                        mqttAndroidClient.subscribe("warning", 0, new IMqttMessageListener() {
-//                            @Override
-//                            public void messageArrived(String topic, MqttMessage message) throws Exception {
-//                                String recvMessage = new String (message.getPayload());
-//                                Log.i(TAG, "messageArrived: " + recvMessage);
-//                                //historyList.add(recvMessage);
-//                                HistoryDB historyDB = new HistoryDB();
-//                                historyDB.setMessage(recvMessage);
-//                                historyDB.save();
-//                            }
-//                        });
-                        
-//                        mqttAndroidClient.subscribe(topics, qoss, iMqttMessageListeners);
 
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
-                    HistoryDB lastHistoryDB = DataSupport.findLast(HistoryDB.class);
-                    //Log.i(TAG, "database: " + lastHistoryDB.getMessage());
-                    //ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, historyList);
-                    //listView.setAdapter(adapter);
+
 
                 }
 
