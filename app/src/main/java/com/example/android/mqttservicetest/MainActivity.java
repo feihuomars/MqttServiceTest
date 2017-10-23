@@ -173,8 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(IMqttToken asyncActionToken) {
                     HistoryFragment historyFragment = (HistoryFragment) getSupportFragmentManager().findFragmentByTag("history");
                     View view = historyFragment.getView();
-                    final TextView textView = (TextView) view.findViewById(R.id.history_text);
-                    textView.setText("success");
+
 
                     try {
                         mqttAndroidClient.subscribe(topics, qoss, null, new IMqttActionListener() {
