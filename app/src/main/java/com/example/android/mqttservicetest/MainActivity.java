@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
         for (HistoryDB historyDB : selectedList){
             Log.i(TAG, "onCreate: " + historyDB.getMessage());
-            ((Data)getApplicationContext()).historyList.add(0, historyDB.getMessage() + "\n" + historyDB.getTopic());     //逆序添加元素进list
+            ((Data)getApplicationContext()).historyList.add(0, historyDB);     //逆序添加元素进list
         }
         //从数据库中查出订阅消息
         List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);
@@ -154,10 +154,11 @@ public class MainActivity extends AppCompatActivity {
                         .build();
                 manager.notify(1, notification);
 
-                ((Data)getApplicationContext()).historyList.add(0, recvMessage);
+
                 HistoryDB historyDB = new HistoryDB();
                 historyDB.setMessage(recvMessage);
                 historyDB.setTopic(topic);
+                ((Data)getApplicationContext()).historyList.add(0, historyDB);
                 historyDB.save();
             }
 
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
         for (HistoryDB historyDB : selectedList){
             Log.i(TAG, "onCreate: " + historyDB.getMessage());
-            ((Data)getApplicationContext()).historyList.add(historyDB.getMessage());
+            ((Data)getApplicationContext()).historyList.add(historyDB);
         }
         //从数据库中查出订阅消息
         List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);

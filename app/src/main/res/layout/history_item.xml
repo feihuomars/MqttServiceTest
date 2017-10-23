@@ -8,15 +8,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_margin="15dp"
-        android:textSize="30sp"/>
+        android:layout_marginLeft="15dp"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/history_topic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="15dp"
+
+        android:layout_marginLeft="15dp"
         android:textSize="15sp"/>
 
 </LinearLayout>

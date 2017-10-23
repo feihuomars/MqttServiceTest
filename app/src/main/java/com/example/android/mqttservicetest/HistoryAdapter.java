@@ -31,7 +31,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryDB>{
         TextView historyTopic = (TextView) view.findViewById(R.id.history_topic);
         TextView historyMessage = (TextView) view.findViewById(R.id.history_message);
         historyTopic.setText(historyItem.getTopic());
-        historyItem.setMessage(historyItem.getMessage());
+        historyMessage.setText(historyItem.getMessage());
         return view;
     }
 }
