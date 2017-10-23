@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         List<HistoryDB> selectedList = DataSupport.findAll(HistoryDB.class);
         for (HistoryDB historyDB : selectedList){
             Log.i(TAG, "onCreate: " + historyDB.getMessage());
-            ((Data)getApplicationContext()).historyList.add(0, historyDB.getMessage());     //逆序添加元素进list
+            ((Data)getApplicationContext()).historyList.add(0, historyDB.getMessage() + "\n" + historyDB.getTopic());     //逆序添加元素进list
         }
         //从数据库中查出订阅消息
         List<SubscriptionDB> foundSubscription = DataSupport.findAll(SubscriptionDB.class);
@@ -158,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 ((Data)getApplicationContext()).historyList.add(0, recvMessage);
                 HistoryDB historyDB = new HistoryDB();
                 historyDB.setMessage(recvMessage);
+                historyDB.setTopic(topic);
                 historyDB.save();
             }
 
