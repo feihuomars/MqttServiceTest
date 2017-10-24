@@ -32,8 +32,10 @@ import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -136,7 +138,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String recvMessage = new String (message.getPayload());
-                Log.i(TAG, "messageArrived: topic: " + topic + "message: " + recvMessage + "time:" + System.currentTimeMillis());
+                long currentTime = System.currentTimeMillis();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy年-MM月dd日-HH时mm分ss秒");
+                Date date = new Date(currentTime);
+
+                Log.i(TAG, "messageArrived: topic: " + topic + " message: " + recvMessage + " time:" + formatter.format(date));
 
                 //设置notification通知
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -158,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 HistoryDB historyDB = new HistoryDB();
                 historyDB.setMessage(recvMessage);
                 historyDB.setTopic(topic);
+                historyDB.setTime(currentTime);
                 ((Data)getApplicationContext()).historyList.add(0, historyDB);
                 historyDB.save();
             }

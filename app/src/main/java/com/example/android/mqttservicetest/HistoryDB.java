@@ -10,6 +10,17 @@ public class HistoryDB extends DataSupport {
     private int id;
     private String message;
     private String topic;
+    private long time;
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+
 
     public String getTopic() {
         return topic;
